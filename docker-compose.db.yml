@@ -1,4 +1,4 @@
-name: "quoin-db"
+name: "noliteo-db"
 
 services:
   postgres:

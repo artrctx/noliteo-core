@@ -1,4 +1,4 @@
-name: "quoin-core"
+name: "noliteo-core"
 services:
   api:
     env_file: ".env"
