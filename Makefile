@@ -65,7 +65,7 @@ watch:
 tidy:
 	@go mod tidy
 db-up:
-	docker compose -f docker-compose.db.yml up
+	docker compose -f docker-compose.db.yml up -d
 db-down:
 	docker compose -f docker-compose.db.yml down --volumes
 db-auth-sync:
@@ -76,3 +76,5 @@ db-sync:
 	migrate -database postgres://postgres:password@localhost:5432/postgres -path migrations up
 db-repo-generate:
 	sqlc generate
+docker-nuke:
+	docker system prune --all --force --volumes
