@@ -12,14 +12,14 @@ $$ language 'plpgsql';
 CREATE TABLE token (
     id uuid NOT NULL PRIMARY KEY DEFAULT gen_random_uuid(),
     -- Hashed Token
-    key VarChar(32),
+    key VarChar(60) UNIQUE,
     ident Text,
     created_at timestamptz NOT NULL DEFAULT now()
 );
 
 CREATE OR REPLACE FUNCTION public.validate_token_key (tkn text) RETURNS TABLE (id uuid, ident text) LANGUAGE plpgsql AS $function$
 BEGIN
-    RETURN QUERY SELECT t.id, t.ident FROM "token" t WHERE t.key=crypt(tkn, t.key);
+    RETURN QUERY SELECT t.id, t.ident FROM "token" t WHERE t.key=crypt(tkn, t.key) LIMIT 1;
 END;
 
 $function$;
@@ -33,7 +33,7 @@ END IF;
 
 -- THROW IF DUPLICATE KEY EXISTS
 IF EXISTS ( SELECT 1 FROM validate_token_key (new."key") ) THEN 
-    RAISE EXCEPTION 'Duplicate key detected';
+    RAISE EXCEPTION 'duplicate key detected';
 END IF;
 
 new."key" := crypt(new.key, gen_salt('bf'));

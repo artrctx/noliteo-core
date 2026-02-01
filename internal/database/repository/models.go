@@ -11,9 +11,9 @@ import (
 	"github.com/google/uuid"
 )
 
-type Placeholder struct {
-	ID          uuid.UUID      `json:"id"`
-	Name        string         `json:"name"`
-	Description sql.NullString `json:"description"`
-	CreatedAt   time.Time      `json:"created_at"`
+type Token struct {
+	ID        uuid.UUID      `json:"id"`
+	Key       sql.NullString `json:"key"`
+	Ident     sql.NullString `json:"ident"`
+	CreatedAt time.Time      `json:"created_at"`
 }
