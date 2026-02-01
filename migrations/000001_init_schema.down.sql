@@ -1,5 +1,5 @@
 -- drop auth updated at trigger function
-DROP TRIGGER IF EXISTS hash_token_trg;
+DROP TRIGGER IF EXISTS hash_token_trg ON public.token;
 
 DROP FUNCTION IF EXISTS public.hash_token_trigger;
 

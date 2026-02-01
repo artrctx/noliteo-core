@@ -73,7 +73,7 @@ db-auth-sync:
 db-migrate:
 	migrate create -ext sql -dir migrations -seq ${name}
 db-sync:
-	migrate -database postgres://postgres:password@localhost:5432/postgres -path migrations up
+	migrate -database postgres://postgres:password@localhost:5432/postgres?sslmode=disable -path migrations up
 db-repo-generate:
 	sqlc generate
 docker-nuke:

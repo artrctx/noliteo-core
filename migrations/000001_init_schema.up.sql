@@ -14,29 +14,36 @@ CREATE TABLE token (
     -- Hashed Token
     key VarChar(32),
     ident Text,
-    created_at timestamptz NOT NULL DEFAULT now() expires_at timestamptz
+    created_at timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE OR REPLACE FUNCTION public.validate_token_key (tkn text) RETURNS TABLE (id uuid, ident text) LANGAUGE plpgsql AS $function$BEGIN
+CREATE OR REPLACE FUNCTION public.validate_token_key (tkn text) RETURNS TABLE (id uuid, ident text) LANGUAGE plpgsql AS $function$
+BEGIN
     RETURN QUERY SELECT t.id, t.ident FROM "token" t WHERE t.key=crypt(tkn, t.key);
 END;
 
 $function$;
 
-CREATE OR REPLACE FUNCTION public.hash_token_trigger () RETURN TRIGGER LANGAUAGE plpgsql AS $function$
+CREATE OR REPLACE FUNCTION public.hash_token_trigger () RETURNS TRIGGER LANGUAGE plpgsql AS $function$
 BEGIN
+
+IF TG_OP = 'UPDATE' THEN
+    RAISE EXCEPTION 'token key cannot be updated';
+END IF;
+
 -- THROW IF DUPLICATE KEY EXISTS
-IF EXISTS ( SELECT * FROM validate_token_key (new.key) ) THEN 
+IF EXISTS ( SELECT 1 FROM validate_token_key (new."key") ) THEN 
     RAISE EXCEPTION 'Duplicate key detected';
 END IF;
 
-new.key := crypt(new.key, gen_salt("bf"));
+new."key" := crypt(new.key, gen_salt('bf'));
+
+RETURN new;
 
 END;
 $function$;
 
-CREATE
-OR REPLACE hash_token_trg BEFORE INSERT
+CREATE OR REPLACE TRIGGER hash_token_trg BEFORE INSERT
 OR
 UPDATE ON public.token FOR EACH ROW
 EXECUTE FUNCTION hash_token_trigger ();
