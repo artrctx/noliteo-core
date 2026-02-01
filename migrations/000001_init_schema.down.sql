@@ -1,7 +1,11 @@
 -- drop auth updated at trigger function
-DROP TABLE IF EXISTS usr;
+DROP TRIGGER IF EXISTS hash_token_trg;
 
 DROP FUNCTION IF EXISTS public.hash_token_trigger;
+
+DROP FUNCTION IF EXISTS public.validate_token_key;
+
+DROP TABLE IF EXISTS token;
 
 DROP FUNCTION IF EXISTS public.auto_updated_at;
 
