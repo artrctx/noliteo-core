@@ -9,14 +9,12 @@ import (
 	"time"
 
 	cfg "github.com/artrctx/quoin-core/internal/config"
-	"github.com/artrctx/quoin-core/internal/database/repository"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	_ "github.com/joho/godotenv/autoload"
 )
 
 type Service struct {
 	db *sql.DB
-	repository.Queries
 }
 
 var dbInst *Service

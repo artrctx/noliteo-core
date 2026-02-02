@@ -71,9 +71,11 @@ db-down:
 db-auth-sync:
 	@pg_dump --schema-only -n auth -f migrations/auth-schema.sql postgres://postgres:password@localhost:5432/postgres
 db-migrate:
-	migrate create -ext sql -dir migrations -seq ${name}
-db-sync:
-	migrate -database postgres://postgres:password@localhost:5432/postgres?sslmode=disable -path migrations up
+	@migrate create -ext sql -dir migrations -seq ${name}
+db-migrate-up:
+	@migrate -database postgres://postgres:password@localhost:5432/postgres?sslmode=disable -path migrations up
+db-migrate-down:
+	@migrate -database postgres://postgres:password@localhost:5432/postgres?sslmode=disable -path migrations down
 db-repo-generate:
 	sqlc generate
 docker-nuke:

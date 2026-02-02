@@ -9,14 +9,14 @@ import (
 	"context"
 )
 
-const getToken = `-- name: GetToken :one
+const validateToken = `-- name: ValidateToken :one
 SELECT
     validate_token_key ($1)
 `
 
-func (q *Queries) GetToken(ctx context.Context, key string) (interface{}, error) {
-	row := q.db.QueryRowContext(ctx, getToken, key)
-	var validate_token_key interface{}
+func (q *Queries) ValidateToken(ctx context.Context, key string) (string, error) {
+	row := q.db.QueryRowContext(ctx, validateToken, key)
+	var validate_token_key string
 	err := row.Scan(&validate_token_key)
 	return validate_token_key, err
 }
