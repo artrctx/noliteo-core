@@ -24,6 +24,22 @@ CREATE OR REPLACE FUNCTION public.validate_token_key (tkn text) RETURNS text LAN
     LIMIT 1;
 $$;
 
+-- CREATE OR REPLACE FUNCTION public.validate_token_key (tkn text) RETURNS text LANGUAGE plpgsql AS $$
+-- DECLARE
+--     ident text;
+-- BEGIN
+--     SELECT t.ident
+--     INTO ident
+--     FROM "token" t
+--     WHERE t.key = crypt(tkn, t.key)
+--     LIMIT 1;
+--     IF ident IS NULL THEN
+--         RAISE EXCEPTION 'No key found for provided token'
+--             USING ERRCODE = 'P0001';
+--     END IF;
+--     RETURN ident;
+-- END;
+-- $$;
 CREATE OR REPLACE FUNCTION public.hash_token_trigger () RETURNS TRIGGER LANGUAGE plpgsql AS $function$
 BEGIN
 

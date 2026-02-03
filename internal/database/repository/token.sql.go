@@ -7,16 +7,19 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 )
 
 const validateToken = `-- name: ValidateToken :one
 SELECT
+    validate_token_key
+FROM
     validate_token_key ($1)
 `
 
-func (q *Queries) ValidateToken(ctx context.Context, key string) (string, error) {
+func (q *Queries) ValidateToken(ctx context.Context, key string) (sql.NullString, error) {
 	row := q.db.QueryRowContext(ctx, validateToken, key)
-	var validate_token_key string
+	var validate_token_key sql.NullString
 	err := row.Scan(&validate_token_key)
 	return validate_token_key, err
 }
