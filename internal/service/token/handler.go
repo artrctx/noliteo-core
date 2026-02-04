@@ -12,32 +12,28 @@ import (
 
 type ValidationResponse struct {
 	Ident string `json:"ident"`
+	// need to return session token
 }
 
 // Validate Token given a token
 func (t *TokenService) ValidateTokenHandler(w http.ResponseWriter, req *http.Request) {
-	token := chi.URLParam(req, "token")
+	tokenStr := chi.URLParam(req, "token")
 
-	if len(token) == 0 {
+	if len(tokenStr) == 0 {
 		http.Error(w, "Invalid token length", http.StatusBadRequest)
 		return
 	}
 
-	ident, err := repository.New(t.DB).ValidateToken(req.Context(), token)
+	token, err := repository.New(t.DB).ValidateToken(req.Context(), tokenStr)
 
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed validating token with error:%v", err.Error()), http.StatusInternalServerError)
 		return
 	}
 
-	if !ident.Valid {
-		http.Error(w, "Invalid Token", http.StatusUnauthorized)
-		return
-	}
-
 	resBody := response.SuccessResponse{
 		Message: "Valid token",
-		Data:    ValidationResponse{ident.String},
+		Data:    ValidationResponse{token.Ident.String},
 	}
 
 	if err := json.NewEncoder(w).Encode(resBody); err != nil {

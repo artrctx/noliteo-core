@@ -8,18 +8,29 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"time"
+
+	"github.com/google/uuid"
 )
 
 const validateToken = `-- name: ValidateToken :one
 SELECT
-    validate_token_key
+    id,
+    ident,
+    created_at
 FROM
     validate_token_key ($1)
 `
 
-func (q *Queries) ValidateToken(ctx context.Context, key string) (sql.NullString, error) {
+type ValidateTokenRow struct {
+	ID        uuid.UUID      `json:"id"`
+	Ident     sql.NullString `json:"ident"`
+	CreatedAt time.Time      `json:"created_at"`
+}
+
+func (q *Queries) ValidateToken(ctx context.Context, key string) (ValidateTokenRow, error) {
 	row := q.db.QueryRowContext(ctx, validateToken, key)
-	var validate_token_key sql.NullString
-	err := row.Scan(&validate_token_key)
-	return validate_token_key, err
+	var i ValidateTokenRow
+	err := row.Scan(&i.ID, &i.Ident, &i.CreatedAt)
+	return i, err
 }

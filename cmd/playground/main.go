@@ -10,7 +10,7 @@ import (
 
 func main() {
 	db := database.Get().Conn()
-	res, err := repository.New(db).ValidateToken(context.Background(), "test-key")
+	res, err := repository.New(db).ValidateToken(context.Background(), "test-keywrong")
 	fmt.Printf("%T\n -- type --", res)
 	fmt.Printf("%v, value\n", res)
 	fmt.Println(res, err)
