@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/artrctx/noliteo-core/internal/middleware"
@@ -30,13 +31,19 @@ func (s *Server) Register() http.Handler {
 	// health
 	r.Get("/health", health.HealthHandlerFunc(s.db))
 
+	// Token Route
+	ts := token.TokenService{DB: s.db.Conn()}
+	r.Post("/generate-token", ts.GenerateTokenHandler)
+
 	// protected routes
 	r.Route("/api", func(r chi.Router) {
 		r.Use(middleware.Protected)
 
-		// Token Route
-		ts := token.TokenService{DB: s.db.Conn()}
-		r.Get("/token/{token}", ts.ValidateTokenHandler)
+		r.Get("/test", func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(http.StatusOK)
+			fmt.Println("Successful credential check")
+			fmt.Fprint(w, "Successful u have credentials")
+		})
 	})
 
 	return r
