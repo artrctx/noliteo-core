@@ -3,8 +3,8 @@ package database
 import (
 	"testing"
 
-	cfg "github.com/artrctx/quoin-core/internal/config"
-	"github.com/artrctx/quoin-core/tests/dbtest"
+	cfg "github.com/artrctx/noliteo-core/internal/config"
+	"github.com/artrctx/noliteo-core/tests/dbtest"
 )
 
 var testDBConfig *cfg.DatabaseConfig = &cfg.DatabaseConfig{}

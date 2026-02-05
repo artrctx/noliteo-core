@@ -3,9 +3,9 @@ package server
 import (
 	"net/http"
 
-	"github.com/artrctx/quoin-core/internal/server/middleware"
-	"github.com/artrctx/quoin-core/internal/server/route"
-	"github.com/artrctx/quoin-core/internal/service/token"
+	"github.com/artrctx/noliteo-core/internal/middleware"
+	"github.com/artrctx/noliteo-core/internal/service/health"
+	"github.com/artrctx/noliteo-core/internal/service/token"
 	"github.com/go-chi/chi/v5"
 	chiMiddleware "github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
@@ -28,10 +28,7 @@ func (s *Server) Register() http.Handler {
 	}))
 
 	// health
-	r.Get("/health", route.HealthHandlerFunc(s.db))
-
-	// auth
-	r.Get("/auth/verify", route.VerifyAuthHandler)
+	r.Get("/health", health.HealthHandlerFunc(s.db))
 
 	// protected routes
 	r.Route("/api", func(r chi.Router) {

@@ -1,6 +1,9 @@
 package config
 
 import (
+	"crypto/rsa"
+	"crypto/x509"
+	"encoding/pem"
 	"fmt"
 	"log"
 	"os"
@@ -75,4 +78,36 @@ func GetDatabaseConfigFromEnv() DatabaseConfig {
 
 func (d DatabaseConfig) ConnStr() string {
 	return fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s&search_path=%s", d.Username, d.Password, d.Host, d.Port, d.Database, d.SSLMode, d.Schema)
+}
+
+type JwtConfig struct {
+	Private *rsa.PrivateKey
+	Public  *rsa.PublicKey
+}
+
+func GetJwtConfigFromEnv() JwtConfig {
+	pk := os.Getenv("JWT_PRIVATE_KEY")
+	if pk == "" {
+		log.Fatalln("Missing 'JWT_PRIVATE_KEY'")
+	}
+
+	blk, _ := pem.Decode([]byte(pk))
+	if blk == nil {
+		log.Fatalln("Failed parsing 'JWT_PRIVATE_KEY'")
+	}
+
+	pPrivateKey, err := x509.ParsePKCS8PrivateKey(blk.Bytes)
+	if err != nil {
+		log.Fatalf("Failed parsing 'JWT_PRIVATE_KEY' block to PKCS1PrivateKey: %v\n", err)
+	}
+
+	privateKey, ok := pPrivateKey.(*rsa.PrivateKey)
+	if !ok {
+		log.Fatalf("Failed to cast PKCS8 private key as rsa.PrivateKey")
+	}
+
+	return JwtConfig{
+		Private: privateKey,
+		Public:  &privateKey.PublicKey,
+	}
 }

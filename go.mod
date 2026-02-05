@@ -1,4 +1,4 @@
-module github.com/artrctx/quoin-core
+module github.com/artrctx/noliteo-core
 
 go 1.25.3
 

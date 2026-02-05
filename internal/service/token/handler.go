@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/artrctx/quoin-core/internal/database/repository"
-	"github.com/artrctx/quoin-core/internal/helper/response"
+	"github.com/artrctx/noliteo-core/internal/database/repository"
+	"github.com/artrctx/noliteo-core/internal/helper/response"
 	"github.com/go-chi/chi/v5"
 )
 

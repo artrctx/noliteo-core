@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	cfg "github.com/artrctx/quoin-core/internal/config"
+	cfg "github.com/artrctx/noliteo-core/internal/config"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/modules/postgres"
 	"github.com/testcontainers/testcontainers-go/wait"

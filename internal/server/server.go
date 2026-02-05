@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/artrctx/quoin-core/internal/config"
-	"github.com/artrctx/quoin-core/internal/database"
+	"github.com/artrctx/noliteo-core/internal/config"
+	"github.com/artrctx/noliteo-core/internal/database"
 	_ "github.com/joho/godotenv/autoload"
 )
 

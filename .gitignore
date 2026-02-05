@@ -32,3 +32,7 @@ go.work.sum
 # .vscode/
 main
 tmp
+
+# rsa keys
+private_key.pem
+public_key.pem

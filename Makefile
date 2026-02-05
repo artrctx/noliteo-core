@@ -80,3 +80,5 @@ db-repo-generate:
 	sqlc generate
 docker-nuke:
 	docker system prune --all --force --volumes
+gen-rsa:
+	openssl genrsa -out private_key.pem 2048 

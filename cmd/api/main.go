@@ -9,7 +9,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/artrctx/quoin-core/internal/server"
+	"github.com/artrctx/noliteo-core/internal/server"
 )
 
 func gracefulShutdown(srv *http.Server, done chan bool) {

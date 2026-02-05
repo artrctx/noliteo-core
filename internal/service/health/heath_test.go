@@ -1,4 +1,4 @@
-package route
+package health
 
 import (
 	"encoding/json"
@@ -7,9 +7,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	cfg "github.com/artrctx/quoin-core/internal/config"
-	"github.com/artrctx/quoin-core/internal/database"
-	"github.com/artrctx/quoin-core/tests/dbtest"
+	cfg "github.com/artrctx/noliteo-core/internal/config"
+	"github.com/artrctx/noliteo-core/internal/database"
+	"github.com/artrctx/noliteo-core/tests/dbtest"
 )
 
 var testDBConfig *cfg.DatabaseConfig = &cfg.DatabaseConfig{}

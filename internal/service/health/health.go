@@ -1,10 +1,10 @@
-package route
+package health
 
 import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/artrctx/quoin-core/internal/database"
+	"github.com/artrctx/noliteo-core/internal/database"
 )
 
 func HealthHandlerFunc(s *database.Service) http.HandlerFunc {

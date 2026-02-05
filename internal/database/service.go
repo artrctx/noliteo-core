@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"time"
 
-	cfg "github.com/artrctx/quoin-core/internal/config"
+	cfg "github.com/artrctx/noliteo-core/internal/config"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	_ "github.com/joho/godotenv/autoload"
 )
