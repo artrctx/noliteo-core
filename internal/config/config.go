@@ -91,6 +91,10 @@ func GetJwtConfigFromEnv() JwtConfig {
 		log.Fatalln("Missing 'JWT_PRIVATE_KEY'")
 	}
 
+	return NewJwtConfig(pk)
+}
+
+func NewJwtConfig(pk string) JwtConfig {
 	blk, _ := pem.Decode([]byte(pk))
 	if blk == nil {
 		log.Fatalln("Failed parsing 'JWT_PRIVATE_KEY'")

@@ -11,7 +11,11 @@ import (
 	"github.com/lestrrat-go/jwx/v3/jwt"
 )
 
-var jwtCfg = config.GetJwtConfigFromEnv()
+type JwtManager struct {
+	cfg config.JwtConfig
+}
+
+var jwtMgr *JwtManager
 
 // https://medium.com/techverito/secure-jwt-authentication-in-go-using-jwks-cba89d442f77
 type Token struct {
@@ -19,7 +23,15 @@ type Token struct {
 	Ident string `json:"ident"`
 }
 
+func newWithEnv() *JwtManager {
+	return &JwtManager{config.GetJwtConfigFromEnv()}
+}
+
 func GenerateToken(t Token) (string, error) {
+	if jwtMgr == nil {
+		jwtMgr = newWithEnv()
+	}
+
 	token := jwt.New()
 
 	tokenKeys := map[string]interface{}{
@@ -34,7 +46,7 @@ func GenerateToken(t Token) (string, error) {
 		}
 	}
 
-	signedToken, err := jwt.Sign(token, jwt.WithKey(jwa.RS256(), jwtCfg.Private))
+	signedToken, err := jwt.Sign(token, jwt.WithKey(jwa.RS256(), jwtMgr.cfg.Private))
 	if err != nil {
 		return "", fmt.Errorf("failed to sign token: %w", err)
 	}
@@ -43,7 +55,11 @@ func GenerateToken(t Token) (string, error) {
 }
 
 func VerifyToken(tkn string) (Token, error) {
-	verifiedToken, err := jwt.Parse([]byte(tkn), jwt.WithKey(jwa.RS256(), jwtCfg.Public))
+	if jwtMgr == nil {
+		jwtMgr = newWithEnv()
+	}
+
+	verifiedToken, err := jwt.Parse([]byte(tkn), jwt.WithKey(jwa.RS256(), jwtMgr.cfg.Public))
 	if err != nil {
 		return Token{}, fmt.Errorf("verifying jwt failed: %w", err)
 	}
