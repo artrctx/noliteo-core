@@ -11,10 +11,9 @@ func HealthHandlerFunc(s *database.Service) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
-		//TODO: might want to update with
 		response := map[string]interface{}{
 			"status":  "healthy",
-			"service": "quoin-sever",
+			"service": "noliteo-core",
 			"db":      s.Health(),
 		}
 
