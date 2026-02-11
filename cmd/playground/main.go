@@ -20,6 +20,6 @@ func main() {
 		return
 	}
 
-	rr, err := jwt.VerifyToken(r)
+	rr, err := jwt.ValidateToken(r)
 	fmt.Println("parse", rr, err)
 }
