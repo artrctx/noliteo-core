@@ -14,7 +14,7 @@ const TokenCtxKey TokenKey = "noliteo-token"
 
 func Protected(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		token, err := jwt.VerifyTokenFromRequest(r)
+		token, err := jwt.ValidateTokenFromRequest(r)
 		if err != nil {
 			slog.Error("failed to get valid token from request", slog.Any("error", err))
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)

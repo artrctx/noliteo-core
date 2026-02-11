@@ -65,7 +65,7 @@ func TestEncodeAndDecodeJwt(t *testing.T) {
 			t.Errorf("failed generating token with token ident: %v, tid: %v; err: %v", tkn.TID, tkn.Ident, err)
 		}
 
-		jTkn, err := VerifyToken(jwt)
+		jTkn, err := ValidateToken(jwt)
 		if err != nil {
 			t.Errorf("failed to verify token; err: %v", err)
 		}

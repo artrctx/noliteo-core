@@ -6,12 +6,12 @@ import (
 	"net/http"
 
 	"github.com/artrctx/noliteo-core/internal/database/repository"
-	"github.com/artrctx/noliteo-core/internal/helper/response"
 	"github.com/artrctx/noliteo-core/internal/jwt"
 )
 
 type GenerateTokenResponse struct {
-	Jwt string `json:"jwt"`
+	Ident string `json:"ident"`
+	Jwt   string `json:"jwt"`
 }
 
 type GenerateTokenRequest struct {
@@ -41,16 +41,25 @@ func (t *TokenService) GenerateTokenHandler(w http.ResponseWriter, req *http.Req
 		return
 	}
 
-	resBody := response.SuccessResponse{
-		Message: "Valid token",
-		Data:    GenerateTokenResponse{generatedJwt},
-	}
-
-	if err := json.NewEncoder(w).Encode(resBody); err != nil {
+	if err := json.NewEncoder(w).Encode(GenerateTokenResponse{token.Ident.String, generatedJwt}); err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+}
+
+func (t *TokenService) ValidateTokenHandler(w http.ResponseWriter, req *http.Request) {
+	token, err := jwt.ValidateTokenFromRequest(req)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed validating jwt: %v", err.Error()), http.StatusUnauthorized)
+		return
+	}
+	if err := json.NewEncoder(w).Encode(token); err != nil {
+		http.Error(w, fmt.Sprintf("Internal server error: %v", err.Error()), http.StatusInternalServerError)
+		return
+	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 }

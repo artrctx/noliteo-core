@@ -33,7 +33,8 @@ func (s *Server) Register() http.Handler {
 
 	// Token Route
 	ts := token.TokenService{DB: s.db.Conn()}
-	r.Post("/generate-token", ts.GenerateTokenHandler)
+	r.Post("/token", ts.GenerateTokenHandler)
+	r.Get("/token", ts.GenerateTokenHandler)
 
 	// protected routes
 	r.Route("/api", func(r chi.Router) {

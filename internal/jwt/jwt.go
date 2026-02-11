@@ -54,14 +54,14 @@ func GenerateToken(t Token) (string, error) {
 	return string(signedToken), nil
 }
 
-func VerifyToken(tkn string) (Token, error) {
+func ValidateToken(tkn string) (Token, error) {
 	if jwtMgr == nil {
 		jwtMgr = newWithEnv()
 	}
 
 	verifiedToken, err := jwt.Parse([]byte(tkn), jwt.WithKey(jwa.RS256(), jwtMgr.cfg.Public))
 	if err != nil {
-		return Token{}, fmt.Errorf("verifying jwt failed: %w", err)
+		return Token{}, fmt.Errorf("validating jwt failed: %w", err)
 	}
 
 	var tid, ident string
@@ -79,14 +79,14 @@ func VerifyToken(tkn string) (Token, error) {
 	return Token{tid, ident}, nil
 }
 
-func VerifyTokenFromRequest(r *http.Request) (Token, error) {
+func ValidateTokenFromRequest(r *http.Request) (Token, error) {
 	splitKey := strings.Split(r.Header.Get("Authorization"), " ")
 	if len(splitKey) != 2 {
 		return Token{}, fmt.Errorf("authorization header contains invalid key structure")
 	}
 	key := splitKey[1]
 
-	token, err := VerifyToken(key)
+	token, err := ValidateToken(key)
 	if err != nil {
 		return Token{}, err
 	}
