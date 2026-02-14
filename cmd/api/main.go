@@ -45,7 +45,7 @@ func main() {
 	// Handle graceful shutdown in a seperate goroutine
 	go gracefulShutdown(srv, done)
 
-	log.Printf("quoin server starting at %v", srv.Addr)
+	log.Printf("noliteo server starting at %v", srv.Addr)
 
 	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		panic(fmt.Sprintf("http server error: %s", err))
