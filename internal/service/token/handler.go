@@ -34,7 +34,7 @@ func (t *TokenService) GenerateTokenHandler(w http.ResponseWriter, req *http.Req
 	token, err := repository.New(t.DB).ValidateToken(req.Context(), reqBody.Token)
 
 	if err != nil {
-		slog.Error("failed validating token.", slog.Any("error", err))
+		slog.Error("token validation error", slog.Any("error", err))
 		if errors.Is(err, sql.ErrNoRows) {
 			http.Error(w, "Not valid token", http.StatusNotFound)
 		} else {
