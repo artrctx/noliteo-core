@@ -1,12 +1,12 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/artrctx/noliteo-core/internal/middleware"
 	"github.com/artrctx/noliteo-core/internal/service/health"
 	"github.com/artrctx/noliteo-core/internal/service/token"
+	"github.com/artrctx/noliteo-core/internal/service/walktalk"
 	"github.com/go-chi/chi/v5"
 	chiMiddleware "github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
@@ -40,11 +40,9 @@ func (s *Server) Register() http.Handler {
 	r.Route("/api", func(r chi.Router) {
 		r.Use(middleware.Protected)
 
-		r.Get("/test", func(w http.ResponseWriter, r *http.Request) {
-			w.WriteHeader(http.StatusOK)
-			fmt.Println("Successful credential check")
-			fmt.Fprint(w, "Successful u have credentials")
-		})
+		// Walkie Talkie Routes
+		wt := walktalk.WalkTalkService{DB: s.db.Conn()}
+		r.Get("/walkie-talkie", wt.WSHandler)
 	})
 
 	return r
