@@ -80,11 +80,21 @@ func ValidateToken(tkn string) (Token, error) {
 }
 
 func ValidateTokenFromRequest(r *http.Request) (Token, error) {
-	splitKey := strings.Split(r.Header.Get("Authorization"), " ")
-	if len(splitKey) != 2 {
-		return Token{}, fmt.Errorf("authorization header contains invalid key structure")
+	var key string
+	authHeader := r.Header.Get("Authorization")
+	if authHeader != "" {
+		splitKey := strings.Split(authHeader, " ")
+		if len(splitKey) != 2 {
+			return Token{}, fmt.Errorf("authorization header contains invalid key structure")
+		}
+		key = splitKey[1]
+	} else {
+		providedToken := r.URL.Query().Get("token")
+		if providedToken == "" {
+			return Token{}, fmt.Errorf("no token provided")
+		}
+		key = providedToken
 	}
-	key := splitKey[1]
 
 	token, err := ValidateToken(key)
 	if err != nil {

@@ -25,9 +25,8 @@ func (wk *WalkTalkService) WSHandler(w http.ResponseWriter, r *http.Request) {
 		msgType, msg, err := conn.ReadMessage()
 		if err != nil {
 			slog.Error("failed to receive msg", slog.Any("error", err))
-			http.Error(w, fmt.Sprintf("failed to receive msg: %v", err.Error()), http.StatusInternalServerError)
 			break
 		}
-		log.Printf("websocket msg: %v, msgType: %v", msg, msgType)
+		log.Printf("websocket msg: %v, msgType: %v", string(msg), msgType)
 	}
 }
