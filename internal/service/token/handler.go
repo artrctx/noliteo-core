@@ -29,6 +29,7 @@ func (t *TokenService) GenerateTokenHandler(w http.ResponseWriter, req *http.Req
 	if err := json.NewDecoder(req.Body).Decode(&reqBody); err != nil {
 		slog.Error("failed to parse request body:", slog.Any("error", err))
 		http.Error(w, fmt.Sprintf("failed to parse request body: %v", err), http.StatusBadRequest)
+		return
 	}
 
 	token, err := repository.New(t.DB).ValidateToken(req.Context(), reqBody.Token)
