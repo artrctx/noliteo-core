@@ -75,6 +75,7 @@ func (wk *WalkTalkService) WSHandler(w http.ResponseWriter, r *http.Request) {
 			}); err != nil {
 				slog.Error("failed to insert rtc description", slog.Any("error", err))
 			}
+			//send msgs out
 		default:
 			slog.Error("Invalid msg type", slog.Any("msg", msg))
 			// send error msg
