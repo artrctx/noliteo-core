@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/artrctx/noliteo-core/internal/config"
+	"github.com/google/uuid"
 )
 
 func randPrivateKey(bits int) (string, error) {
@@ -52,11 +53,11 @@ func TestMain(m *testing.M) {
 
 func TestEncodeAndDecodeJwt(t *testing.T) {
 	cases := [5]Token{
-		{"id1", rand.Text()},
-		{"id2", rand.Text()},
-		{"id3", rand.Text()},
-		{"id4", rand.Text()},
-		{"id5", rand.Text()},
+		{uuid.New(), rand.Text()},
+		{uuid.New(), rand.Text()},
+		{uuid.New(), rand.Text()},
+		{uuid.New(), rand.Text()},
+		{uuid.New(), rand.Text()},
 	}
 
 	for _, tkn := range cases {

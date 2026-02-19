@@ -6,10 +6,62 @@ package repository
 
 import (
 	"database/sql"
+	"database/sql/driver"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
 )
+
+type RtcType string
+
+const (
+	RtcTypeOffer  RtcType = "offer"
+	RtcTypeAnswer RtcType = "answer"
+)
+
+func (e *RtcType) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = RtcType(s)
+	case string:
+		*e = RtcType(s)
+	default:
+		return fmt.Errorf("unsupported scan type for RtcType: %T", src)
+	}
+	return nil
+}
+
+type NullRtcType struct {
+	RtcType RtcType `json:"rtc_type"`
+	Valid   bool    `json:"valid"` // Valid is true if RtcType is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullRtcType) Scan(value interface{}) error {
+	if value == nil {
+		ns.RtcType, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.RtcType.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullRtcType) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.RtcType), nil
+}
+
+type RtcDescription struct {
+	ID        uuid.UUID `json:"id"`
+	Sdp       string    `json:"sdp"`
+	Type      RtcType   `json:"type"`
+	TokenID   uuid.UUID `json:"token_id"`
+	CreatedAt time.Time `json:"created_at"`
+}
 
 type Token struct {
 	ID        uuid.UUID      `json:"id"`

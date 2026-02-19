@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/artrctx/noliteo-core/internal/config"
+	"github.com/google/uuid"
 	"github.com/lestrrat-go/jwx/v3/jwa"
 	"github.com/lestrrat-go/jwx/v3/jwt"
 )
@@ -19,8 +20,8 @@ var jwtMgr *JwtManager
 
 // https://medium.com/techverito/secure-jwt-authentication-in-go-using-jwks-cba89d442f77
 type Token struct {
-	TID   string `json:"tid"`
-	Ident string `json:"ident"`
+	TID   uuid.UUID `json:"tid"`
+	Ident string    `json:"ident"`
 }
 
 func newWithEnv() *JwtManager {
@@ -64,12 +65,16 @@ func ValidateToken(tkn string) (Token, error) {
 		return Token{}, fmt.Errorf("validating jwt failed: %w", err)
 	}
 
-	var tid, ident string
-	verifiedToken.Get("tid", &tid)
+	var tidStr, ident string
+	verifiedToken.Get("tid", &tidStr)
 	verifiedToken.Get("ident", &ident)
 
-	if tid == "" {
+	if tidStr == "" {
 		return Token{}, fmt.Errorf("jwt claim contains no tid (token id)")
+	}
+	tid, err := uuid.Parse(tidStr)
+	if err != nil {
+		return Token{}, fmt.Errorf("invalid format of jwt claim tid: %w", err)
 	}
 
 	if ident == "" {

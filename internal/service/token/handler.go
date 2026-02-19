@@ -44,7 +44,7 @@ func (t *TokenService) GenerateTokenHandler(w http.ResponseWriter, req *http.Req
 		return
 	}
 
-	generatedJwt, err := jwt.GenerateToken(jwt.Token{TID: token.ID.String(), Ident: token.Ident.String})
+	generatedJwt, err := jwt.GenerateToken(jwt.Token{TID: token.ID, Ident: token.Ident.String})
 
 	if err != nil {
 		slog.Error("failed to generate jwt token.", slog.Any("error", err))

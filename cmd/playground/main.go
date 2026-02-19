@@ -13,7 +13,7 @@ func main() {
 	db := database.Get().Conn()
 	res, err := repository.New(db).ValidateToken(context.Background(), "test-key")
 	fmt.Println("key check", res, err)
-	r, err := jwt.GenerateToken(jwt.Token{TID: res.ID.String(), Ident: res.Ident.String})
+	r, err := jwt.GenerateToken(jwt.Token{TID: res.ID, Ident: res.Ident.String})
 	fmt.Println("jwt gen: ", r, err)
 
 	if err != nil {
