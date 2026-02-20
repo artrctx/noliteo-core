@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Go WebSocket Chat</title>
+  </head>
+  <body>
+    <!-- 10) For the frontend, we have a simple chat UI: a scrollable div for messages, a text input, and a Send button. No frameworks, no build tools — just plain HTML. -->
+    <div
+      id="chat"
+      style="height: 300px; overflow-y: scroll; border: 1px solid #ccc"
+    ></div>
+    <input type="text" id="msg" placeholder="Type a message..." autofocus />
+    <button onclick="send()">Send</button>
+
+    <script>
+      var ws = new WebSocket("http://localhost:8080/api/walkie-talkie?token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NzEzNDg4NDgsImlkZW50Ijoicm9vdGVyIiwidGlkIjoiMjhkNTYwMGUtMGNmYi00N2FhLTk0MDktY2JlNDg1ZTJlZmJlIn0.HwvPMWFvhG2M-GFjwKT6tlCqhJ4SdWxOlXUYHUr32H-x7ndACNuTq37xXI9zucSW3VldD9Dpa-65fIuYAQbP0Pr5CxhFjoFggItzR3ydho85tJ4squ-xEYz1tZkKlmU2vvdStrsTReoWGwOxLcy3FvWb7WbFEn5s8Z3DSqYBIKSHRpKFX-0qiv19ZcNmr2N9zUwrc0HkE7DOrNy3Ia22vd25P7XfZUwtbWLqJkmKUAakx9nappIQsvkm5vy-ckuaU1ZY9egSQoiswYAxel7KBIX2j6js9MT1J3iLEPqXmLNYkaawLUBlOo1zbepWjVsUFJTmPwuKVyN8t57fPysbbg");
+
+      ws.onmessage = function (event) {
+        var chat = document.getElementById("chat");
+        var message = document.createElement("div");
+        message.innerText = event.data;
+        chat.appendChild(message);
+        chat.scrollTop = chat.scrollHeight;
+      };
+
+      function send() {
+        var input = document.getElementById("msg");
+        if (input.value) {
+          ws.send(input.value);
+          input.value = "";
+        }
+      }
+
+      documentz
+        .getElementById("msg")
+        .addEventListener("keypress", function (event) {
+          if (event.key === "Enter") send();
+        });
+    </script>
+  </body>
+</html>

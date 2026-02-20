@@ -3,6 +3,7 @@ package server
 import (
 	"net/http"
 
+	"github.com/artrctx/noliteo-core/internal/hub"
 	"github.com/artrctx/noliteo-core/internal/middleware"
 	"github.com/artrctx/noliteo-core/internal/service/health"
 	"github.com/artrctx/noliteo-core/internal/service/token"
@@ -31,6 +32,10 @@ func (s *Server) Register() http.Handler {
 	// health
 	r.Get("/health", health.HealthHandlerFunc(s.db))
 
+	r.Get("/test", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "index.html")
+	})
+
 	// Token Route
 	ts := token.TokenService{DB: s.db.Conn()}
 	r.Post("/token", ts.GenerateTokenHandler)
@@ -41,7 +46,9 @@ func (s *Server) Register() http.Handler {
 		r.Use(middleware.Protected)
 
 		// Walkie Talkie Routes
-		wt := walktalk.WalkTalkService{DB: s.db.Conn()}
+		hub := hub.New()
+		go hub.Run()
+		wt := walktalk.WalkTalkService{DB: s.db.Conn(), Hub: hub}
 		r.Get("/walkie-talkie", wt.WSHandler)
 	})
 
