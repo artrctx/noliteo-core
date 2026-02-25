@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      PORT: 8080
+      PORT: 8443 
       DB_DATABASE: postgres
       DB_PASSWORD: password
       DB_USERNAME: postgres
@@ -15,7 +15,7 @@ services:
       DB_SCHEMA: public
       DB_SSLMODE: disable
     ports:
-      - 8080:8080
+      - 8443:8443
     networks:
       app:
 
