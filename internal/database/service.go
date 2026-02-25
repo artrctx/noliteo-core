@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"log/slog"
 	"strconv"
 	"time"
 
@@ -55,7 +56,7 @@ func (s *Service) Health() map[string]string {
 	if err != nil {
 		stats["status"] = "down"
 		stats["error"] = fmt.Sprintf("db down: %v", err)
-		log.Fatalf("db down: %v", err) // Log the error and terminate the program
+		slog.Error("db down", slog.Any("error", err)) // Log the error and terminate the program
 		return stats
 	}
 
